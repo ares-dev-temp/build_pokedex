@@ -7,14 +7,6 @@ import (
 	"strings"
 )
 
-type cliCommand struct {
-	name        string
-	description string
-	callback    func() error
-}
-
-var commandSet = map[string]cliCommand{}
-
 func cleanInput(text string) []string {
 	outs := []string{}
 	curr_word := ""
@@ -36,38 +28,12 @@ func cleanInput(text string) []string {
 	return outs
 }
 
-func commandHelp() error {
-	response := "Welcome to the Pokedex!\nUsage:\n\n"
-
-	for commandName := range commandSet {
-		cli := commandSet[commandName]
-		response += fmt.Sprintf("%s: %s\n", cli.name, cli.description)
-	}
-	response = response[0 : len(response)-2]
-
-	fmt.Println(response)
-	return nil
-}
-
-func commandExit() error {
-	fmt.Print("Closing the Pokedex... Goodbye!")
-	os.Exit(0)
-	return nil
-}
-
 func main() {
-	commandSet = map[string]cliCommand{
-		"exit": {
-			name:        "exit",
-			description: "Exit the Pokedex",
-			callback:    commandExit,
-		},
-		"help": {
-			name:        "help",
-			description: "Displays a help message",
-			callback:    commandHelp,
-		},
-	}
+	url := "https://pokeapi.co/api/v2/location-area"
+	c := config{Next: url + "?offset=0&limit=20", Previous: url + "?offset=0&limit=20"}
+	cPtr := &c
+
+	SetCommands(cPtr)
 
 	scanner := bufio.NewScanner(os.Stdin)
 
