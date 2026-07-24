@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 )
 
 func cleanInput(text string) []string {
@@ -34,6 +35,11 @@ func main() {
 	cPtr := &c
 
 	SetCommands(cPtr)
+
+	const baseTime = 5 * time.Second
+	//const waitTime = baseTime + 5*time.Millisecond
+	//pokeCache := NewCache(baseTime)
+	NewClient(baseTime)
 
 	scanner := bufio.NewScanner(os.Stdin)
 
