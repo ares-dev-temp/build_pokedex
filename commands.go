@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand/v2"
 	"os"
 	"pokedex_program/internal"
 )
@@ -20,9 +21,17 @@ type cliCommand struct {
 
 var commandSet = map[string]cliCommand{}
 var location = ""
+var pokemon = ""
+
+var caught_pokemons = map[string]internal.Pokemon{}
 
 func SetCommands(c *config) {
 	commandSet = map[string]cliCommand{
+		"catch": {
+			name:        "catch",
+			description: "attempts catching a pokemon",
+			callback:    commandCatch,
+		},
 		"explore": {
 			name:        "explore",
 			description: "lists out all pokemons located in an area",
@@ -57,14 +66,40 @@ func run_output(commands []string) {
 			location = commands[1]
 		}
 
-		err := cli.callback()
-
-		if err != nil {
-			fmt.Printf("errors %v\n", err)
+		if commands[0] == "catch" {
+			pokemon = commands[1]
 		}
+
+		cli.callback()
+
+		/*if err != nil {
+			fmt.Printf("errors %v\n", err)
+		}*/
 	} else {
 		fmt.Printf("Unknown Command\n")
 	}
+}
+
+func commandCatch() error {
+	url_path := "https://pokeapi.co/api/v2/pokemon/" + pokemon
+	fmt.Printf("Throwing a Pokeball at %s...\n", pokemon)
+
+	pokemonData, err := internal.GetPokemonData(url_path)
+
+	if err != nil {
+		fmt.Printf("%s doesn't exist!\n", pokemon)
+	} else {
+		val := (float64(pokemonData.BaseExperience) / 208.0)
+
+		if val < rand.Float64() {
+			fmt.Printf("%s was caught!\n", pokemon)
+			caught_pokemons[pokemon] = pokemonData
+		} else {
+			fmt.Printf("%s escaped!\n", pokemon)
+		}
+	}
+
+	return err
 }
 
 func commandExplore() error {
