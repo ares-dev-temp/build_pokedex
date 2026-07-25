@@ -37,8 +37,6 @@ func main() {
 	SetCommands(cPtr)
 
 	const baseTime = 5 * time.Second
-	//const waitTime = baseTime + 5*time.Millisecond
-	//pokeCache := NewCache(baseTime)
 	NewClient(baseTime)
 
 	scanner := bufio.NewScanner(os.Stdin)
@@ -49,17 +47,9 @@ func main() {
 		scanner.Scan()
 		text_out := scanner.Text()
 
-		command := cleanInput(text_out)[0]
+		commands := cleanInput(text_out)
 
-		if cli, ok := commandSet[command]; ok {
-			err := cli.callback()
-
-			if err != nil {
-				fmt.Printf("errors %v\n", err)
-			}
-		} else {
-			fmt.Printf("Unknown Command\n")
-		}
+		run_output(commands)
 
 	}
 }

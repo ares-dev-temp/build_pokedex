@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+// for paging around location areas
 type config struct {
 	Next     string
 	Previous string
@@ -17,9 +18,15 @@ type cliCommand struct {
 }
 
 var commandSet = map[string]cliCommand{}
+var location = ""
 
 func SetCommands(c *config) {
 	commandSet = map[string]cliCommand{
+		"explore": {
+			name:        "explore",
+			description: "lists out all pokemons located in an area",
+			callback:    commandExplore,
+		},
 		"map": {
 			name:        "map",
 			description: "list locations",
@@ -41,6 +48,27 @@ func SetCommands(c *config) {
 			callback:    func() error { return commandHelp(c) },
 		},
 	}
+}
+
+func run_output(commands []string) {
+	if cli, ok := commandSet[commands[0]]; ok {
+		if commands[0] == "explore" {
+			location = commands[1]
+		}
+
+		err := cli.callback()
+
+		if err != nil {
+			fmt.Printf("errors %v\n", err)
+		}
+	} else {
+		fmt.Printf("Unknown Command\n")
+	}
+}
+
+func commandExplore() error {
+	url_path := "https://pokeapi.co/api/v2/location-area/" + location
+	return GetLocationData(url_path)
 }
 
 func commandMapb(c *config) error {

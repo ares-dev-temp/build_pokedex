@@ -1,5 +1,7 @@
 package main
 
+//should be in internal
+
 import (
 	"sync"
 	"time"
