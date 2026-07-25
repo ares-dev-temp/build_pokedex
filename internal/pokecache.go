@@ -1,6 +1,4 @@
-package main
-
-//should be in internal
+package internal
 
 import (
 	"sync"

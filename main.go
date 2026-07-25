@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"pokedex_program/internal"
 	"strings"
 	"time"
 )
@@ -31,13 +32,14 @@ func cleanInput(text string) []string {
 
 func main() {
 	url := "https://pokeapi.co/api/v2/location-area"
-	c := config{Next: url + "?offset=0&limit=20", Previous: url + "?offset=0&limit=20"}
+	//c := config{Next: url + "?offset=0&limit=20", Previous: url + "?offset=0&limit=20"}
+	c := config{Next: url + "?offset=0&limit=20", Previous: ""}
 	cPtr := &c
 
 	SetCommands(cPtr)
 
 	const baseTime = 5 * time.Second
-	NewClient(baseTime)
+	internal.NewClient(baseTime)
 
 	scanner := bufio.NewScanner(os.Stdin)
 

@@ -1,4 +1,4 @@
-package main
+package internal
 
 //should be in internal
 
@@ -84,7 +84,8 @@ func NewClient(interval time.Duration) {
 	pokeCache = *NewCache(interval)
 }
 
-func GetPokeData(urlPath string, c *config) error {
+// func GetPokeData(urlPath string, c *config) error {
+func GetPokeData(urlPath string) (error, string, string) {
 	body, ok := pokeCache.Get(urlPath)
 
 	if !ok {
@@ -92,14 +93,14 @@ func GetPokeData(urlPath string, c *config) error {
 
 		if err != nil {
 			fmt.Printf("Error A: %v", err)
-			return err
+			return err, "", ""
 		}
 
 		body, err = io.ReadAll(res.Body)
 
 		if err != nil {
 			fmt.Printf("Error B: %v", err)
-			return err
+			return err, "", ""
 		}
 
 		pokeCache.Add(urlPath, body)
@@ -121,10 +122,13 @@ func GetPokeData(urlPath string, c *config) error {
 
 	offset, _ := strconv.Atoi(queryParams.Get("offset"))
 
-	c.Next = fmt.Sprintf("https://pokeapi.co/api/v2/location-area?offset=%v&limit=%v", offset+20, 20)
-	c.Previous = pokeData.Previous
+	Next := fmt.Sprintf("https://pokeapi.co/api/v2/location-area?offset=%v&limit=%v", offset, 20)
+	Previous := pokeData.Previous
 
-	return nil
+	//fmt.Printf("Next: %s\n", Next)
+	//fmt.Printf("Previous: %s\n\n", Previous)
+
+	return nil, Next, Previous
 }
 
 func GetLocationData(urlPath string) error {

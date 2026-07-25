@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"pokedex_program/internal"
 )
 
 // for paging around location areas
@@ -68,19 +69,27 @@ func run_output(commands []string) {
 
 func commandExplore() error {
 	url_path := "https://pokeapi.co/api/v2/location-area/" + location
-	return GetLocationData(url_path)
+	return internal.GetLocationData(url_path)
 }
 
 func commandMapb(c *config) error {
 	if len(c.Previous) > 0 {
-		return GetPokeData(c.Previous, c)
+		//temp := c.Previous
+		err, Next, Previous := internal.GetPokeData(c.Previous)
+		c.Next = Next
+		c.Previous = Previous
+		return err
 	}
 
 	return nil
 }
 
 func commandMap(c *config) error {
-	return GetPokeData(c.Next, c)
+	//temp := c.Next
+	err, Next, Previous := internal.GetPokeData(c.Next)
+	c.Next = Next
+	c.Previous = Previous
+	return err
 }
 
 func commandHelp(c *config) error {
