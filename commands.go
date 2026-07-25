@@ -27,6 +27,16 @@ var caught_pokemons = map[string]internal.Pokemon{}
 
 func SetCommands(c *config) {
 	commandSet = map[string]cliCommand{
+		"pokedex": {
+			name:        "pokedex",
+			description: "list out all caught pokemons",
+			callback:    commandPokedex,
+		},
+		"inspect": {
+			name:        "inspect",
+			description: "shows details of pokemon that have been caught",
+			callback:    commandInspect,
+		},
 		"catch": {
 			name:        "catch",
 			description: "attempts catching a pokemon",
@@ -66,7 +76,7 @@ func run_output(commands []string) {
 			location = commands[1]
 		}
 
-		if commands[0] == "catch" {
+		if commands[0] == "catch" || commands[0] == "inspect" {
 			pokemon = commands[1]
 		}
 
@@ -78,6 +88,39 @@ func run_output(commands []string) {
 	} else {
 		fmt.Printf("Unknown Command\n")
 	}
+}
+
+func commandPokedex() error {
+	fmt.Printf("Your Pokedex:\n")
+	for pokemons := range caught_pokemons {
+		//cli := commandSet[commandName]
+		fmt.Printf(" - %s\n", pokemons)
+	}
+
+	return nil
+}
+
+func commandInspect() error {
+	if pokemonData, ok := caught_pokemons[pokemon]; ok {
+		fmt.Printf("Name: %s\n", pokemonData.Name)
+		fmt.Printf("Height: %d\n", pokemonData.Height)
+		fmt.Printf("Weight: %d\n", pokemonData.Weight)
+
+		fmt.Printf("Stats:\n")
+		for _, statData := range pokemonData.Stats {
+			fmt.Printf("  -%s: %d\n", statData.Stat.Name, statData.Value)
+		}
+
+		fmt.Printf("Types:\n")
+		for _, typeData := range pokemonData.Types {
+			fmt.Printf("  - %s\n", typeData.Type.Name)
+		}
+
+		return nil
+	}
+
+	fmt.Printf("%s doesn't exist or hasn't been caught\n", pokemon)
+	return nil
 }
 
 func commandCatch() error {

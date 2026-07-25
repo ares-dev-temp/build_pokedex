@@ -23,10 +23,28 @@ type PokeData struct {
 	} `json:"results"`
 }
 
+type NamedAPIResource struct {
+	Name string `json:"name"`
+	URL  string `json:"url"`
+}
+
+type PokemonStat struct {
+	Stat  NamedAPIResource `json:"stat"`
+	Value int              `json:"base_stat"`
+}
+
+type PokemonType struct {
+	Type NamedAPIResource `json:"type"`
+}
+
 type Pokemon struct {
-	Name           string `json:"name"`
-	URL            string `json:"url"`
-	BaseExperience int    `json:"base_experience"`
+	Name string `json:"name"`
+	//URL            string      `json:"url"`
+	BaseExperience int           `json:"base_experience"`
+	Height         int           `json:"height"`
+	Weight         int           `json:"weight"`
+	Stats          []PokemonStat `json:"stats"`
+	Types          []PokemonType `json:"types"`
 }
 
 type LocationArea struct {
