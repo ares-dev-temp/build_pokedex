@@ -33,8 +33,8 @@ func cleanInput(text string) []string {
 func main() {
 	url := "https://pokeapi.co/api/v2/location-area"
 	//c := config{Next: url + "?offset=0&limit=20", Previous: url + "?offset=0&limit=20"}
-	c := config{Next: url + "?offset=0&limit=20", Previous: ""}
-	cPtr := &c
+	cfg := config{Next: url + "?offset=0&limit=20", Previous: ""}
+	cPtr := &cfg
 
 	SetCommands(cPtr)
 
@@ -51,7 +51,7 @@ func main() {
 
 		commands := cleanInput(text_out)
 
-		run_output(commands)
+		run_output(commands, cPtr)
 
 	}
 }
